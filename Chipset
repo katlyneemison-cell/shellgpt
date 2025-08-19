@@ -1,0 +1,43 @@
+@set L=C:\Windows\temp\install.log
+@set IP=[********Install Pass********]
+@set IPR=[********Install Pass, Restart is need********]
+@set IF=[********Install Fail********]
+@echo [%time%]=========Install Intel Chipset driver========= >> %L%
+:ins1
+pnputil/add-driver "%-dp0Drivers\AlderLake PCH-PSystem.inf" /install >> %L%
+@if %errorlevel%==0 (echo [%time%]%IP% >> %L% & goto ins2)
+@if %errorlevel%==259 (echo [%time%]%errorlevel% >> %L% & goto ins2)
+@if %errorlevel%==3010 (echo [%time%] %IPR% >> %L% & goto ins2)
+@if not %errorlevel%==0 goto ERR
+:ins2
+pnputil/add-driver "%-dp0Drivers\AlderLake PCH-PSystemLPSS.inf" /install >> %L%
+@if %errorlevel%==0 (echo [%time%] %IP% >> %L% & goto ins3)
+@if %errorlevel%==259 (echo [%time%] %errorlevel% >> %L% & goto ins3)
+@if %errorlevel%==3010 (echo [%time%]%IPR% >> %L% & goto ins3)
+@if not %errorlevel%==0 goto ERR
+:ins3
+pnputil/add-driver "%-dp0Drivers\AlderLake PCH-PSystem Northpeak.inf" /install >> %L%
+@if %errorlevel%==0 (echo [%time%] %IP% >> %L% & goto ins4)
+@if %errorlevel%==259 (echo [%time%] %errorlevel% >> %L% & goto ins4)
+@if %errorlevel%==3010 (echo [%time%] %IPR% >> %L% & goto ins4)
+@if not %errorlevel%==0 goto ERR
+:ins4
+pnputil/add-driver "%-dp0Drivers\AlderLake System.inf" /install >> %L%
+@if %errorlevel%==0 (echo [%time%]%IP% >> %L% & goto ins5)
+@if %errorlevel%==259 (echo [%time%] %errorlevel% >> %L% & goto ins5)
+@if %errorlevel%==3010 (echo [%time%] %IPR% >> %L% & goto ins5)
+@if not %errorlevel%==0 goto ERR
+:ins5
+pnputil/add-driver "%-dp0Drivers\AlderLake DmaSecExtension.inf" /install >> %L%
+@if %errorlevel%==0 (echo [%time%] %IP% >> %L% & goto ins6)
+@if %errorlevel%==259 (echo [%time%]%errorlevel% >> %L% & goto ins6)
+@if %errorlevel%==3010 (echo [%time%] %IPR% >> %L% & goto ins6)
+@if not %errorlevel%==0 goto ERR
+:ins6
+pnputil/add-driver "%-dp0Drivers\AlderLakePCH-PDmaSecExtension.inf" /install >> %L%
+@if %errorlevel%==0 (echo [%time%] %IP% >> %L% & goto ins7)
+@if %errorlevel%==259 (echo [%time%] %errorlevel% >> %L% & goto ins7)
+@if %errorlevel%==3010 (echo [%time%] %IPR% >> %L% & goto ins7)
+@if not %errorlevel%==0 goto ERR
+:ins7
+$23
